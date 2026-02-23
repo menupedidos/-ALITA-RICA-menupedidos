@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALITA RICA - Menú</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#ff6600">
+<style>
+body{font-family:Arial;background:#111;color:white;margin:0}
+header{background:#ff6600;padding:15px;text-align:center;font-size:22px;font-weight:bold}
+.container{padding:15px}
+.card{background:#1c1c1c;padding:15px;margin-bottom:15px;border-radius:10px}
+button{background:#ff6600;color:white;border:none;padding:10px;margin-top:5px;width:100%;border-radius:8px}
+button:hover{background:#ff3300}
+textarea{width:100%;border:none;border-radius:8px;padding:8px}
+.total{font-size:20px;font-weight:bold;text-align:center;color:#00ff88;margin-top:10px}
+</style>
+</head>
+<body>
+
+<header>🔥 ALITA RICA 🔥</header>
+
+<div class="container">
+
+<div class="card">
+<h3>👤 Nombre</h3>
+<input type="text" id="nombre" placeholder="Tu nombre" style="width:100%;padding:8px;border-radius:6px;border:none;">
+</div>
+
+<div class="card">
+<h3>🍔 Burgers</h3>
+<button onclick="agregar('Clásica',109)">Clásica $109</button>
+<button onclick="agregar('Doble Bacón',129)">Doble Bacón $129</button>
+<button onclick="agregar('Champiburger',145)">Champiburger $145</button>
+</div>
+
+<div class="card">
+<h3>🍗 Wings</h3>
+<button onclick="agregar('Wings 10 pzas',139)">10 pzas $139</button>
+<button onclick="agregar('Wings 18 pzas',229)">18 pzas $229</button>
+</div>
+
+<div class="card">
+<h3>📝 Pedido</h3>
+<textarea id="pedido" rows="5" readonly></textarea>
+<div class="total">Total: $<span id="total">0</span></div>
+<button onclick="enviar()">Enviar por WhatsApp</button>
+</div>
+
+</div>
+
+<script>
+let total=0;
+function agregar(nombre,precio){
+total+=precio;
+document.getElementById("pedido").value+=nombre+" - $"+precio+"\n";
+document.getElementById("total").innerText=total;
+}
+function enviar(){
+let nombre=document.getElementById("nombre").value;
+let pedido=document.getElementById("pedido").value;
+if(!nombre||!pedido){alert("Completa nombre y pedido");return;}
+let mensaje="🔥 ALITA RICA 🔥\nCliente: "+nombre+"\n\nPedido:\n"+pedido+"Total: $"+total;
+let telefono="529903667103";
+let url="https://wa.me/"+telefono+"?text="+encodeURIComponent(mensaje);
+window.open(url);
+}
+</script>
+
+</body>
+</html>
