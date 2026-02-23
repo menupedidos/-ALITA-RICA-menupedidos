@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alita Rica - Sabor de Barrio</title>
+<style>
+body{
+font-family: Arial, sans-serif;
+margin:0;
+background:#111;
+color:#fff;
+}
+header{
+background:#c40000;
+padding:20px;
+text-align:center;
+}
+h1{margin:0;}
+section{
+padding:20px;
+border-bottom:1px solid #333;
+}
+button{
+background:#ff9800;
+color:#000;
+border:none;
+padding:10px;
+margin-top:10px;
+font-weight:bold;
+cursor:pointer;
+border-radius:5px;
+}
+select, input{
+width:100%;
+padding:8px;
+margin-top:5px;
+border-radius:5px;
+border:none;
+}
+.sabores{
+columns:2;
+}
+footer{
+text-align:center;
+padding:20px;
+background:#000;
+}
+</style>
+</head>
+<body>
+
+<header>
+<h1>🔥 ALITA RICA 🔥</h1>
+<p>Sabor de Barrio al Carbón</p>
+</header>
+
+<section>
+<h2>🍔 BURGERS</h2>
+<p>Burger clásica c/ papas - $109</p>
+<p>Doble bacón c/ papas - $129</p>
+<p>Champiburger c/ papas - $145</p>
+<p>Hawaianburger c/ papas - $145</p>
+<p>Cachitoburger c/ papas - $159</p>
+</section>
+
+<section>
+<h2>🍗 ALITAS</h2>
+<p>Orden 10 piezas - $169</p>
+<p>Orden 20 piezas - $299</p>
+
+<label>Escoge hasta 3 sabores:</label>
+<div class="sabores">
+<label><input type="checkbox" value="Takis Blu"> Takis Blu</label><br>
+<label><input type="checkbox" value="BBQ"> BBQ</label><br>
+<label><input type="checkbox" value="Chetos Bolita"> Chetos Bolita</label><br>
+<label><input type="checkbox" value="Ruffles Queso"> Ruffles Queso</label><br>
+<label><input type="checkbox" value="Chetos Flamin"> Chetos Flamin</label><br>
+<label><input type="checkbox" value="Mango Habanero"> Mango Habanero</label><br>
+<label><input type="checkbox" value="Skwinkles"> Skwinkles</label><br>
+<label><input type="checkbox" value="Sauce Black Tajín Valentina"> Sauce Black Tajín Valentina</label><br>
+<label><input type="checkbox" value="Doritos Incógnita"> Doritos Incógnita</label><br>
+<label><input type="checkbox" value="Lemon Pepper"> Lemon Pepper</label><br>
+<label><input type="checkbox" value="Búfalo"> Búfalo</label><br>
+<label><input type="checkbox" value="Pulparindo"> Pulparindo</label><br>
+</div>
+</section>
+
+<section>
+<h2>🍗 BONELESS</h2>
+<p>Orden 250g - $149</p>
+<p>Orden 500g - $269</p>
+</section>
+
+<section>
+<h2>🚚 DELIVERY</h2>
+<label>Dirección (obligatorio):</label>
+<input type="text" id="direccion" placeholder="Escribe tu dirección completa">
+
+<button onclick="enviarPedido()">Enviar pedido por WhatsApp</button>
+</section>
+
+<footer>
+<p>© 2026 Alita Rica - Sabor de Barrio</p>
+</footer>
+
+<script>
+function enviarPedido(){
+let direccion = document.getElementById("direccion").value;
+if(direccion === ""){
+alert("Por favor ingresa tu dirección para Delivery");
+return;
+}
+
+let saboresSeleccionados = [];
+document.querySelectorAll('input[type=checkbox]:checked').forEach((item)=>{
+saboresSeleccionados.push(item.value);
+});
+
+if(saboresSeleccionados.length > 3){
+alert("Solo puedes elegir hasta 3 sabores");
+return;
+}
+
+let mensaje = "Hola! Quiero hacer un pedido.%0A";
+mensaje += "Sabores: " + saboresSeleccionados.join(", ") + "%0A";
+mensaje += "Dirección: " + direccion;
+
+let numero = "5219990000000"; // CAMBIA POR TU NUMERO
+window.open("https://wa.me/" + numero + "?text=" + mensaje, "_blank");
+}
+</script>
+
+</body>
+</html>
