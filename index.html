@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALITA RICA - Pedido Online</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#111;
+    color:#fff;
+    margin:0;
+    padding:20px;
+}
+.container{
+    max-width:800px;
+    margin:auto;
+    background:#1c1c1c;
+    padding:20px;
+    border-radius:10px;
+}
+h1,h2{
+    text-align:center;
+    color:#ff4d00;
+}
+label{
+    font-weight:bold;
+}
+input,select{
+    width:100%;
+    padding:8px;
+    margin:5px 0 15px 0;
+    border-radius:5px;
+    border:none;
+}
+button{
+    width:100%;
+    padding:12px;
+    background:#ff4d00;
+    color:white;
+    font-size:18px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+button:hover{
+    background:#ff2a00;
+}
+.total{
+    font-size:22px;
+    text-align:center;
+    margin:15px 0;
+    color:#00ff88;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🔥 ALITA RICA 🔥</h1>
+<h2>SABOR DE BARRIO AL CARBÓN</h2>
+
+<!-- DATOS CLIENTE -->
+<label>Nombre del Cliente *</label>
+<input type="text" id="nombre" required>
+
+<label>Tipo de pedido *</label>
+<select id="tipoPedido" onchange="mostrarDireccion()">
+<option value="Pickup">Pickup</option>
+<option value="Delivery">Delivery</option>
+</select>
+
+<div id="direccionDiv" style="display:none;">
+<label>Dirección completa con referencia *</label>
+<input type="text" id="direccion">
+</div>
+
+<!-- BURGERS -->
+<h2>🍔 Burgers</h2>
+Clásica $109 <input type="number" id="burger1" min="0" value="0">
+Doble Bacón $129 <input type="number" id="burger2" min="0" value="0">
+Champiburger $145 <input type="number" id="burger3" min="0" value="0">
+Hawaianburger $145 <input type="number" id="burger4" min="0" value="0">
+Cachitoburger $165 <input type="number" id="burger5" min="0" value="0">
+
+<!-- SMASH -->
+<h2>🍔🔥 Promo Smash 3 pzas $99</h2>
+<input type="number" id="smash" min="0" value="0">
+
+<!-- JOCHOS -->
+<h2>🌭 Jochos</h2>
+Clásico $35 <input type="number" id="jocho1" min="0" value="0">
+Hawaiano $45 <input type="number" id="jocho2" min="0" value="0">
+Champi $45 <input type="number" id="jocho3" min="0" value="0">
+Cachitojocho $60 <input type="number" id="jocho4" min="0" value="0">
+
+Promo Jocho 2x60 <input type="number" id="promojocho" min="0" value="0">
+
+<!-- WINGS -->
+<h2>🍗 Wings</h2>
+10 pzas $139 <input type="number" id="wings10" min="0" value="0">
+18 pzas $229 <input type="number" id="wings18" min="0" value="0">
+28 pzas $329 <input type="number" id="wings28" min="0" value="0">
+
+<label>Sabores Wings</label>
+<select id="saboresWings" multiple>
+<option>Lemon peper</option>
+<option>BBQ</option>
+<option>Skwinkles</option>
+<option>Pulparindo</option>
+<option>Valentina</option>
+<option>BlackSauce</option>
+<option>Doritos Incognita</option>
+<option>Mango Habanero</option>
+<option>Chetos Bolita</option>
+<option>Ruffles Queso</option>
+<option>Buffalo</option>
+<option>Takis Blue</option>
+</select>
+
+<!-- BONELESS -->
+<h2>🍗 Boneless</h2>
+10 pzas $139 <input type="number" id="boneless10" min="0" value="0">
+18 pzas $239 <input type="number" id="boneless18" min="0" value="0">
+28 pzas $339 <input type="number" id="boneless28" min="0" value="0">
+
+<label>Sabores Boneless</label>
+<select id="saboresBoneless" multiple>
+<option>Lemon peper</option>
+<option>BBQ</option>
+<option>Skwinkles</option>
+<option>Pulparindo</option>
+<option>Valentina</option>
+<option>BlackSauce</option>
+<option>Doritos Incognita</option>
+<option>Mango Habanero</option>
+<option>Chetos Bolita</option>
+<option>Ruffles Queso</option>
+<option>Buffalo</option>
+<option>Takis Blue</option>
+</select>
+
+<!-- BEBIDAS -->
+<h2>🥤 Bebidas</h2>
+Refresco 355ml $15 <input type="number" id="ref1" min="0" value="0">
+Boing 245ml $22 <input type="number" id="ref2" min="0" value="0">
+Refresco 600ml $27 <input type="number" id="ref3" min="0" value="0">
+
+<!-- PAGO -->
+<h2>💳 Forma de Pago</h2>
+<select id="pago">
+<option>Efectivo</option>
+<option>Transferencia</option>
+</select>
+
+<div class="total">
+Total: $<span id="total">0</span>
+</div>
+
+<button onclick="enviarPedido()">Enviar Pedido por WhatsApp</button>
+
+</div>
+
+<script>
+
+function mostrarDireccion(){
+    const tipo = document.getElementById("tipoPedido").value;
+    document.getElementById("direccionDiv").style.display = tipo === "Delivery" ? "block" : "none";
+}
+
+function calcularTotal(){
+    let total = 0;
+
+    total += burger1.value*109 + burger2.value*129 + burger3.value*145 + burger4.value*145 + burger5.value*165;
+    total += smash.value*99;
+    total += jocho1.value*35 + jocho2.value*45 + jocho3.value*45 + jocho4.value*60 + promojocho.value*60;
+    total += wings10.value*139 + wings18.value*229 + wings28.value*329;
+    total += boneless10.value*139 + boneless18.value*239 + boneless28.value*339;
+    total += ref1.value*15 + ref2.value*22 + ref3.value*27;
+
+    document.getElementById("total").innerText = total;
+    return total;
+}
+
+document.querySelectorAll("input").forEach(input=>{
+    input.addEventListener("input",calcularTotal);
+});
+
+function enviarPedido(){
+
+    const nombre = document.getElementById("nombre").value;
+    const tipo = document.getElementById("tipoPedido").value;
+    const direccion = document.getElementById("direccion").value;
+    const pago = document.getElementById("pago").value;
+
+    if(nombre === ""){
+        alert("El nombre es obligatorio");
+        return;
+    }
+
+    if(tipo === "Delivery" && direccion === ""){
+        alert("Debes ingresar dirección para Delivery");
+        return;
+    }
+
+    const total = calcularTotal();
+
+    let mensaje = `Pedido ALITA RICA%0A`;
+    mensaje += `Nombre: ${nombre}%0A`;
+    mensaje += `Tipo: ${tipo}%0A`;
+
+    if(tipo === "Delivery"){
+        mensaje += `Dirección: ${direccion}%0A`;
+    }
+
+    mensaje += `Forma de pago: ${pago}%0A`;
+    mensaje += `Total: $${total}`;
+
+    const telefono = "5219903667103"; // CAMBIA POR TU NÚMERO
+    window.open(`https://wa.me/${telefono}?text=${mensaje}`, "_blank");
+}
+
+</script>
+
+</body>
+</html>
