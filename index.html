@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALITA RICA - Menú Digital</title>
+
+<style>
+body{
+font-family: Arial, sans-serif;
+background:#111;
+color:#fff;
+margin:0;
+padding:15px;
+}
+
+h1{
+text-align:center;
+color:#ff3c00;
+margin-bottom:20px;
+}
+
+h2{
+color:#ff9900;
+margin-top:25px;
+}
+
+.section{
+background:#1c1c1c;
+padding:15px;
+border-radius:10px;
+margin-bottom:15px;
+}
+
+.item{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin:8px 0;
+}
+
+input[type="number"]{
+width:60px;
+padding:6px;
+border-radius:6px;
+border:none;
+text-align:center;
+}
+
+select, textarea{
+width:100%;
+padding:8px;
+margin-top:8px;
+border-radius:6px;
+border:none;
+}
+
+button{
+width:100%;
+padding:15px;
+background:#ff3c00;
+color:#fff;
+font-size:18px;
+border:none;
+border-radius:10px;
+margin-top:15px;
+cursor:pointer;
+}
+
+.total{
+font-size:20px;
+text-align:center;
+margin-top:15px;
+color:#00ff99;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🔥 ALITA RICA 🔥</h1>
+
+<div id="menu"></div>
+
+<div class="section">
+<h2>💳 Forma de Pago</h2>
+<select id="pago">
+<option value="">Selecciona método de pago</option>
+<option>Efectivo</option>
+<option>Transferencia</option>
+</select>
+</div>
+
+<div class="section">
+<h2>🚚 Dirección de Entrega</h2>
+<textarea id="direccion" rows="3" placeholder="Escribe tu dirección completa"></textarea>
+</div>
+
+<div class="total">Total: $<span id="total">0</span></div>
+
+<button onclick="enviarPedido()">Enviar Pedido por WhatsApp</button>
+
+<script>
+const telefono = "5219903667103";
+
+const sabores = [
+"Takis Blu","BBQ","Chetos Bolita","Ruffles Queso",
+"Chetos Flamin","Mango Habanero","Skwinkles",
+"Sauce Black Tajín Valentina","Doritos Incógnita",
+"Lemon Pepper","Búfalo","Pulparindo"
+];
+
+const menu = [
+{categoria:"🍔 Hamburguesas", items:[
+{nombre:"Burger clásica c/ papas", precio:109},
+{nombre:"Doble bacón c/ papas", precio:129},
+{nombre:"Champiburger c/ papas", precio:145},
+{nombre:"Hawaianburger c/ papas", precio:145},
+{nombre:"Cachitoburger c/ papas", precio:145},
+{nombre:"Promo smash sencillas 3", precio:99}
+]},
+
+{categoria:"🌭 Jochos", items:[
+{nombre:"Jocho clásico c/ papas", precio:35},
+{nombre:"Jocho hawaiano c/ papas", precio:45},
+{nombre:"Jocho champi c/ papas", precio:45},
+{nombre:"Cachitojocho c/ papas", precio:60},
+{nombre:"PromoJocho sencillo 2", precio:60}
+]},
+
+{categoria:"🍗 Alitas (Incluye papas, ranch y zanahoria)", items:[
+{nombre:"Alitas 10 piezas", precio:139, tipo:"alitas"},
+{nombre:"Alitas 18 piezas", precio:229, tipo:"alitas"},
+{nombre:"Alitas 28 piezas", precio:329, tipo:"alitas"},
+{nombre:"Combo Fan", precio:99, tipo:"alitas"},
+{nombre:"Combomix", precio:149, tipo:"alitas"}
+]},
+
+{categoria:"🍗 Boneless (Incluye papas, ranch y zanahoria)", items:[
+{nombre:"Boneless 10 piezas", precio:139, tipo:"boneless"},
+{nombre:"Boneless 18 piezas", precio:239, tipo:"boneless"},
+{nombre:"Boneless 28 piezas", precio:339, tipo:"boneless"}
+]},
+
+{categoria:"🥤 Bebidas", items:[
+{nombre:"Refresco 355ml", precio:15},
+{nombre:"BOING 245ml", precio:20},
+{nombre:"Refresco 600ml", precio:27}
+]}
+];
+
+const contenedor = document.getElementById("menu");
+
+menu.forEach((seccion, sIndex)=>{
+let div = document.createElement("div");
+div.className="section";
+
+let contenido = `<h2>${seccion.categoria}</h2>`;
+
+seccion.items.forEach((item, iIndex)=>{
+let id = sIndex+"-"+iIndex;
+
+contenido += `
+<div class="item">
+<span>${item.nombre} - $${item.precio}</span>
+<input type="number" min="0" value="0" data-id="${id}" data-precio="${item.precio}" data-nombre="${item.nombre}" data-tipo="${item.tipo||''}">
+</div>
+`;
+
+if(item.tipo){
+contenido += `
+<select multiple data-sabores="${id}">
+${sabores.map(s=>`<option value="${s}">${s}</option>`).join("")}
+</select>
+<input type="text" placeholder="Piezas por sabor (ej: 5,5,8)" data-piezas="${id}">
+`;
+}
+});
+
+div.innerHTML = contenido;
+contenedor.appendChild(div);
+});
+
+document.addEventListener("input", calcularTotal);
+
+function calcularTotal(){
+let total=0;
+document.querySelectorAll("input[type='number']").forEach(input=>{
+let cantidad=parseInt(input.value)||0;
+let precio=parseInt(input.dataset.precio);
+total += cantidad * precio;
+});
+document.getElementById("total").innerText = total;
+}
+
+function enviarPedido(){
+
+let direccion = document.getElementById("direccion").value.trim();
+let pago = document.getElementById("pago").value;
+
+if(!direccion){ alert("Ingresa la dirección"); return; }
+if(!pago){ alert("Selecciona forma de pago"); return; }
+
+let mensaje = "🔥 *ALITA RICA* 🔥%0A%0A";
+let total=0;
+
+document.querySelectorAll("input[type='number']").forEach(input=>{
+let cantidad=parseInt(input.value)||0;
+
+if(cantidad>0){
+
+let nombre=input.dataset.nombre;
+let precio=parseInt(input.dataset.precio);
+let tipo=input.dataset.tipo;
+let id=input.dataset.id;
+
+total += cantidad*precio;
+
+mensaje += `🛒 ${nombre} x${cantidad} = $${cantidad*precio}%0A`;
+
+if(tipo){
+let select=document.querySelector(`select[data-sabores='${id}']`);
+let piezas=document.querySelector(`input[data-piezas='${id}']`).value;
+let seleccionados=[...select.selectedOptions].map(o=>o.value);
+
+if(seleccionados.length>3){
+alert("Máximo 3 sabores");
+return;
+}
+
+if(seleccionados.length>0){
+mensaje+=`   🌶 Sabores: ${seleccionados.join(", ")}%0A`;
+}
+
+if(piezas){
+mensaje+=`   🔢 Piezas por sabor: ${piezas}%0A`;
+}
+}
+}
+});
+
+mensaje+=`%0A💰 Total: $${total}%0A`;
+mensaje+=`💳 Pago: ${pago}%0A`;
+mensaje+=`📍 Dirección: ${direccion}`;
+
+window.open(`https://wa.me/${telefono}?text=${mensaje}`,"_blank");
+}
+</script>
+
+</body>
+</html>
