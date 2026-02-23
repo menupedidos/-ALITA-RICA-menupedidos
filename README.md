@@ -22,4 +22,3 @@ Este menú funciona como PWA (App instalable).
 ---
 
 Desarrollado para ALITA RICA - Sabor de Barrio 🔥
-
