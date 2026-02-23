@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔥 ALITA RICA – Pedido Online</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#111;
+    color:#fff;
+    margin:0;
+    padding:15px;
+}
+.container{
+    max-width:900px;
+    margin:auto;
+    background:#1b1b1b;
+    padding:20px;
+    border-radius:12px;
+}
+h1,h2{
+    text-align:center;
+    color:#ff5a00;
+}
+.section{margin-bottom:25px;}
+input, select{
+    width:100%;
+    padding:8px;
+    margin:5px 0 10px 0;
+    border-radius:6px;
+    border:none;
+}
+input[type="number"]{width:90px;}
+button{
+    width:100%;
+    padding:14px;
+    background:#ff5a00;
+    color:white;
+    font-size:18px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+button:hover{background:#ff2e00;}
+.totalBox{
+    font-size:22px;
+    text-align:center;
+    margin:15px 0;
+    color:#00ff88;
+}
+.saborBox{
+    background:#222;
+    padding:8px;
+    border-radius:6px;
+    margin:5px 0;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>🔥 ALITA RICA 🔥</h1>
+<p style="text-align:center;">Sabor de Barrio al Carbón 🍗🍔</p>
+
+<!-- DATOS -->
+<div class="section">
+<label>Nombre *</label>
+<input type="text" id="nombre">
+</div>
+
+<div class="section">
+<label>Tipo de Pedido *</label>
+<select id="tipoPedido" onchange="toggleDireccion()">
+<option value="Pickup">Pickup</option>
+<option value="Delivery">Delivery</option>
+</select>
+</div>
+
+<div class="section" id="direccionBox" style="display:none;">
+<label>Dirección *</label>
+<input type="text" id="direccion">
+</div>
+
+<div class="section">
+<label>Forma de Pago *</label>
+<select id="pago">
+<option value="">Selecciona</option>
+<option value="Efectivo">Efectivo</option>
+<option value="Transferencia">Transferencia</option>
+</select>
+</div>
+
+<!-- BURGERS -->
+<div class="section">
+<h2>🍔 Burgers</h2>
+Clásica $109 <input type="number" min="0" data-precio="109"><br>
+Doble Bacón $129 <input type="number" min="0" data-precio="129"><br>
+Champiburger $145 <input type="number" min="0" data-precio="145"><br>
+Hawaianburger $145 <input type="number" min="0" data-precio="145"><br>
+Cachitoburger $145 <input type="number" min="0" data-precio="145"><br>
+Promo Smash 3 $99 <input type="number" min="0" data-precio="99">
+</div>
+
+<!-- JOCHOS -->
+<div class="section">
+<h2>🌭 Jochos</h2>
+Clásico $35 <input type="number" min="0" data-precio="35"><br>
+Hawaiano $45 <input type="number" min="0" data-precio="45"><br>
+Champi $45 <input type="number" min="0" data-precio="45"><br>
+Cachitojocho $60 <input type="number" min="0" data-precio="60"><br>
+PromoJocho 2 $60 <input type="number" min="0" data-precio="60">
+</div>
+
+<!-- ALITAS -->
+<div class="section">
+<h2>🍗 Alitas</h2>
+<select id="alitasSelect">
+<option value="0">Selecciona presentación</option>
+<option value="10" data-precio="139">10 piezas $139</option>
+<option value="18" data-precio="229">18 piezas $229</option>
+<option value="28" data-precio="329">28 piezas $329</option>
+</select>
+
+<h3>Selecciona EXACTAMENTE 3 sabores</h3>
+<div id="saboresAlitas"></div>
+</div>
+
+<!-- BONELESS -->
+<div class="section">
+<h2>🍗 Boneless</h2>
+<select id="bonelessSelect">
+<option value="0">Selecciona presentación</option>
+<option value="10" data-precio="139">10 piezas $139</option>
+<option value="18" data-precio="239">18 piezas $239</option>
+<option value="28" data-precio="339">28 piezas $339</option>
+</select>
+
+<h3>Selecciona EXACTAMENTE 3 sabores</h3>
+<div id="saboresBoneless"></div>
+</div>
+
+<!-- BEBIDAS -->
+<div class="section">
+<h2>🥤 Bebidas</h2>
+Refresco 355ml $15 <input type="number" min="0" data-precio="15"><br>
+Boing 245ml $20 <input type="number" min="0" data-precio="20"><br>
+Refresco 600ml $27 <input type="number" min="0" data-precio="27">
+</div>
+
+<div class="totalBox">
+Total: $<span id="total">0</span>
+</div>
+
+<button onclick="enviarPedido()">Enviar Pedido por WhatsApp</button>
+
+</div>
+
+<script>
+
+const sabores = [
+"Takis Blu","BBQ","Chetos Bolita","Ruffles Queso",
+"Chetos Flamin","Mango Habanero","Skwinkles",
+"Sauce Black Tajín Valentina","Doritos Incógnita",
+"Lemon Pepper","Búfalo","Pulparindo"
+];
+
+function crearSabores(container){
+let cont=document.getElementById(container);
+sabores.forEach(s=>{
+let div=document.createElement("div");
+div.className="saborBox";
+div.innerHTML=`
+<label><input type="checkbox" value="${s}" onchange="toggleInput(this)"> ${s}</label>
+<input type="number" min="0" placeholder="¿Cuántas piezas?" style="display:none;">
+`;
+cont.appendChild(div);
+});
+}
+
+crearSabores("saboresAlitas");
+crearSabores("saboresBoneless");
+
+function toggleInput(check){
+let input=check.parentElement.nextElementSibling;
+input.style.display=check.checked?"block":"none";
+}
+
+function toggleDireccion(){
+let tipo=document.getElementById("tipoPedido").value;
+document.getElementById("direccionBox").style.display=
+tipo==="Delivery"?"block":"none";
+}
+
+function calcularTotal(){
+let total=0;
+document.querySelectorAll("input[data-precio]").forEach(i=>{
+total+=(parseInt(i.value)||0)*parseInt(i.dataset.precio);
+});
+["alitasSelect","bonelessSelect"].forEach(id=>{
+let sel=document.getElementById(id);
+if(sel.selectedOptions[0].dataset.precio)
+total+=parseInt(sel.selectedOptions[0].dataset.precio);
+});
+document.getElementById("total").innerText=total;
+return total;
+}
+
+document.addEventListener("input",calcularTotal);
+document.addEventListener("change",calcularTotal);
+
+function validarSabores(container,totalPiezas){
+let seleccionados=[];
+let suma=0;
+document.querySelectorAll("#"+container+" .saborBox").forEach(div=>{
+let check=div.querySelector("input[type='checkbox']");
+let piezas=div.querySelector("input[type='number']");
+if(check.checked){
+if(!piezas.value || piezas.value<=0){ return false; }
+seleccionados.push({sabor:check.value,piezas:parseInt(piezas.value)});
+suma+=parseInt(piezas.value);
+}
+});
+if(seleccionados.length!==3) return false;
+if(suma!==totalPiezas) return false;
+return seleccionados;
+}
+
+function enviarPedido(){
+
+let nombre=document.getElementById("nombre").value.trim();
+let tipo=document.getElementById("tipoPedido").value;
+let direccion=document.getElementById("direccion").value.trim();
+let pago=document.getElementById("pago").value;
+
+if(!nombre){alert("Ingresa tu nombre");return;}
+if(tipo==="Delivery" && !direccion){alert("Ingresa dirección");return;}
+if(!pago){alert("Selecciona forma de pago");return;}
+
+let mensaje=`🔥 ALITA RICA 🔥\nNombre: ${nombre}\nTipo: ${tipo}\n`;
+if(tipo==="Delivery") mensaje+=`Dirección: ${direccion}\n`;
+mensaje+=`Forma de pago: ${pago}\n\n`;
+
+let alitasSel=document.getElementById("alitasSelect");
+if(alitasSel.value!=="0"){
+let saboresA=validarSabores("saboresAlitas",parseInt(alitasSel.value));
+if(!saboresA){alert("Alitas: selecciona 3 sabores y que las piezas coincidan");return;}
+mensaje+=`🍗 Alitas: ${alitasSel.selectedOptions[0].text}\n`;
+saboresA.forEach(s=>mensaje+=` - ${s.sabor}: ${s.piezas} piezas\n`);
+mensaje+="\n";
+}
+
+let bonelessSel=document.getElementById("bonelessSelect");
+if(bonelessSel.value!=="0"){
+let saboresB=validarSabores("saboresBoneless",parseInt(bonelessSel.value));
+if(!saboresB){alert("Boneless: selecciona 3 sabores y que las piezas coincidan");return;}
+mensaje+=`🍗 Boneless: ${bonelessSel.selectedOptions[0].text}\n`;
+saboresB.forEach(s=>mensaje+=` - ${s.sabor}: ${s.piezas} piezas\n`);
+mensaje+="\n";
+}
+
+document.querySelectorAll("input[data-precio]").forEach(i=>{
+if(i.value>0){
+let nombreProd=i.parentNode.textContent.split("$")[0].trim();
+mensaje+=`${nombreProd} x${i.value}\n`;
+}
+});
+
+mensaje+=`\nTotal: $${calcularTotal()}`;
+
+let telefono="5219903667103";
+window.location.href="https://wa.me/"+telefono+"?text="+encodeURIComponent(mensaje);
+}
+
+</script>
+</body>
+</html>
