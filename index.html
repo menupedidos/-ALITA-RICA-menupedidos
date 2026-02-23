@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alita Rica - Sabor de Barrio</title>
+
+<style>
+body{
+font-family: Arial, sans-serif;
+margin:0;
+background:#111;
+color:#fff;
+}
+header{
+background:#c40000;
+padding:20px;
+text-align:center;
+}
+h1{margin:0;}
+section{
+padding:20px;
+border-bottom:1px solid #333;
+}
+input, select{
+width:100%;
+padding:10px;
+margin-top:5px;
+margin-bottom:10px;
+border-radius:5px;
+border:none;
+}
+button{
+background:#ff9800;
+color:#000;
+border:none;
+padding:12px;
+font-weight:bold;
+cursor:pointer;
+border-radius:5px;
+width:100%;
+}
+.sabores{
+columns:2;
+}
+footer{
+text-align:center;
+padding:20px;
+background:#000;
+}
+.oculto{
+display:none;
+}
+</style>
+
+</head>
+<body>
+
+<header>
+<h1>🔥 ALITA RICA 🔥</h1>
+<p>Sabor de Barrio al Carbón</p>
+</header>
+
+<section>
+<h2>👤 Datos del Cliente</h2>
+
+<label>Nombre completo:</label>
+<input type="text" id="nombre" placeholder="Escribe tu nombre">
+
+<label>Tipo de pedido:</label>
+<select id="tipoPedido" onchange="mostrarDireccion()">
+<option value="">Selecciona una opción</option>
+<option value="Pickup">Pickup</option>
+<option value="Delivery">Delivery</option>
+</select>
+
+<div id="campoDireccion" class="oculto">
+<label>Dirección completa:</label>
+<input type="text" id="direccion" placeholder="Escribe tu dirección">
+</div>
+
+</section>
+
+<section>
+<h2>🍗 ALITAS</h2>
+<p>10 piezas - $169</p>
+<p>20 piezas - $299</p>
+
+<label>Elige hasta 3 sabores:</label>
+<div class="sabores">
+<label><input type="checkbox" value="Takis Blu"> Takis Blu</label><br>
+<label><input type="checkbox" value="BBQ"> BBQ</label><br>
+<label><input type="checkbox" value="Chetos Bolita"> Chetos Bolita</label><br>
+<label><input type="checkbox" value="Ruffles Queso"> Ruffles Queso</label><br>
+<label><input type="checkbox" value="Chetos Flamin"> Chetos Flamin</label><br>
+<label><input type="checkbox" value="Mango Habanero"> Mango Habanero</label><br>
+<label><input type="checkbox" value="Skwinkles"> Skwinkles</label><br>
+<label><input type="checkbox" value="Sauce Black Tajín Valentina"> Sauce Black Tajín Valentina</label><br>
+<label><input type="checkbox" value="Doritos Incógnita"> Doritos Incógnita</label><br>
+<label><input type="checkbox" value="Lemon Pepper"> Lemon Pepper</label><br>
+<label><input type="checkbox" value="Búfalo"> Búfalo</label><br>
+<label><input type="checkbox" value="Pulparindo"> Pulparindo</label><br>
+</div>
+</section>
+
+<section>
+<button onclick="enviarPedido()">Enviar pedido por WhatsApp</button>
+</section>
+
+<footer>
+<p>© 2026 Alita Rica - Sabor de Barrio</p>
+</footer>
+
+<script>
+function mostrarDireccion(){
+let tipo = document.getElementById("tipoPedido").value;
+let campo = document.getElementById("campoDireccion");
+
+if(tipo === "Delivery"){
+campo.classList.remove("oculto");
+}else{
+campo.classList.add("oculto");
+}
+}
+
+function enviarPedido(){
+
+let nombre = document.getElementById("nombre").value;
+let tipo = document.getElementById("tipoPedido").value;
+let direccion = document.getElementById("direccion") ? document.getElementById("direccion").value : "";
+
+if(nombre === ""){
+alert("Por favor escribe tu nombre");
+return;
+}
+
+if(tipo === ""){
+alert("Selecciona Pickup o Delivery");
+return;
+}
+
+if(tipo === "Delivery" && direccion === ""){
+alert("La dirección es obligatoria para Delivery");
+return;
+}
+
+let sabores = [];
+document.querySelectorAll('input[type=checkbox]:checked').forEach((item)=>{
+sabores.push(item.value);
+});
+
+if(sabores.length > 3){
+alert("Solo puedes elegir hasta 3 sabores");
+return;
+}
+
+let mensaje = "Hola, quiero hacer un pedido.%0A";
+mensaje += "Nombre: " + nombre + "%0A";
+mensaje += "Tipo: " + tipo + "%0A";
+
+if(tipo === "Delivery"){
+mensaje += "Dirección: " + direccion + "%0A";
+}
+
+mensaje += "Sabores: " + sabores.join(", ");
+
+let numero = "5219903667103"; // CAMBIA POR TU NUMERO REAL
+window.open("https://wa.me/" + numero + "?text=" + mensaje, "_blank");
+}
+</script>
+
+</body>
+</html>
